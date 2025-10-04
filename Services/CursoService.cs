@@ -84,8 +84,57 @@ namespace PortalAcademico.Services
         
             return data;
         }
+        public async Task<int> CrearAsync(CursoEditDto dto)
+        {
+            if (dto.Creditos < 0) throw new ArgumentException("Los créditos no pueden ser negativos.");
+            if (dto.HorarioFin <= dto.HorarioInicio)
+                throw new ArgumentException("HorarioFin debe ser mayor que HorarioInicio.");
 
-       
+            var e = new Curso {
+                Codigo = dto.Codigo.Trim(), Nombre = dto.Nombre.Trim(),
+                Creditos = dto.Creditos, CupoMaximo = dto.CupoMaximo,
+                HorarioInicio = dto.HorarioInicio, HorarioFin = dto.HorarioFin,
+                Activo = dto.Activo
+            };
+            _db.Cursos.Add(e);
+            await _db.SaveChangesAsync();
+            await InvalidateCacheAsync();
+            return e.Id;
+        }
+
+        public async Task<bool> EditarAsync(CursoEditDto dto)
+        {
+            if (dto.Id is null) return false;
+            if (dto.Creditos < 0) throw new ArgumentException("Los créditos no pueden ser negativos.");
+            if (dto.HorarioFin <= dto.HorarioInicio)
+                throw new ArgumentException("HorarioFin debe ser mayor que HorarioInicio.");
+
+            var e = await _db.Cursos.FindAsync(dto.Id.Value);
+            if (e is null) return false;
+
+            e.Codigo = dto.Codigo.Trim();
+            e.Nombre = dto.Nombre.Trim();
+            e.Creditos = dto.Creditos;
+            e.CupoMaximo = dto.CupoMaximo;
+            e.HorarioInicio = dto.HorarioInicio;
+            e.HorarioFin = dto.HorarioFin;
+            e.Activo = dto.Activo;
+
+            await _db.SaveChangesAsync();
+            await InvalidateCacheAsync();
+            return true;
+        }
+
+        public async Task<bool> DesactivarAsync(int id)
+        {
+            var e = await _db.Cursos.FindAsync(id);
+            if (e is null) return false;
+
+            e.Activo = false;
+            await _db.SaveChangesAsync();
+            await InvalidateCacheAsync();
+            return true;
+        }
 
         public Task InvalidateCacheAsync() => _cache.RemoveAsync(CacheKey);
     }

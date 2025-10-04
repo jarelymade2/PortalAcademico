@@ -1,0 +1,166 @@
+@model IEnumerable<(int Id, string UsuarioId, string Estado, DateTime Fecha)>
+@{
+    ViewData["Title"] = "Matrículas por curso";
+    var cursoId = (int)ViewBag.CursoId;
+}
+
+<style>
+    body {
+        background-color: #f2f8fc; /* Fondo celeste pastel */
+    }
+
+    h2 {
+        color: #004d73;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+        background-color: white;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-header {
+        background: linear-gradient(90deg, #c8f0fc, #cfe6f6);
+        color: rgb(0, 0, 0);
+        font-weight: 500;
+        border: none;
+        padding: 1rem 1.25rem;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    thead {
+        background-color: #b3e0ff;
+        color: #003d66;
+    }
+
+    tbody tr:hover {
+        background-color: #f5fbff;
+    }
+
+    td, th {
+        vertical-align: middle;
+    }
+
+    .btn-sm {
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn-success {
+        background-color: #66cc99;
+        border-color: #5cbf8b;
+    }
+
+    .btn-success:hover {
+        background-color: #4caf82;
+        border-color: #47a074;
+    }
+
+    .btn-danger {
+        background-color: #ff6666;
+        border-color: #ff6666;
+    }
+
+    .btn-danger:hover {
+        background-color: #ff4d4d;
+        border-color: #ff4d4d;
+    }
+
+    .btn-secondary {
+        background-color: #2a5886;
+        border-color: #2e4964;
+        color: white;
+        font-weight: 500;
+    }
+
+    .btn-secondary:hover {
+        background-color: #203b54;
+        border-color: #22405e;
+    }
+
+    .text-muted {
+        font-style: italic;
+    }
+</style>
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span><strong>Lista de matrículas</strong></span>
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="bi bi-arrow-left-circle"></i> Volver a cursos
+            </a>
+        </div>
+
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Usuario</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted p-4">
+                                No hay matrículas registradas para este curso.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var m in Model)
+                        {
+                            <tr>
+                                <td>@m.Id</td>
+                                <td>@m.UsuarioId</td>
+                                <td>
+                                    @if (m.Estado == "Confirmado")
+                                    {
+                                        <span class="badge bg-success">Confirmado</span>
+                                    }
+                                    else if (m.Estado == "Cancelado")
+                                    {
+                                        <span class="badge bg-danger">Cancelado</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">@m.Estado</span>
+                                    }
+                                </td>
+                                <td>@m.Fecha.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                                <td class="text-end">
+                                    <form class="d-inline" method="post" asp-action="Confirmar" asp-route-id="@m.Id" asp-route-cursoId="@cursoId">
+                                        <button class="btn btn-sm btn-success me-1">
+                                            <i class="bi bi-check-circle"></i> Confirmar
+                                        </button>
+                                    </form>
+                                    <form class="d-inline" method="post" asp-action="Cancelar" asp-route-id="@m.Id" asp-route-cursoId="@cursoId">
+                                        <button class="btn btn-sm btn-danger">
+                                            <i class="bi bi-x-circle"></i> Cancelar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
