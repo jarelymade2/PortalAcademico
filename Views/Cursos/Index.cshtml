@@ -1,0 +1,53 @@
+@model IEnumerable<PortalAcademico.Models.Curso>
+@using PortalAcademico.Dto
+@{
+    ViewData["Title"] = "Catálogo de cursos";
+}
+<h1>Catálogo de cursos</h1>
+
+@if (TempData["Error"] is string e)
+{
+  <div class="alert alert-danger">@e</div>
+}
+
+<form method="get" class="row gy-2 gx-3 align-items-end">
+  <div class="col-md-3">
+    <label class="form-label">Nombre</label>
+    <input class="form-control" name="Nombre" value="@Context.Request.Query["Nombre"]" />
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">Créditos mín</label>
+    <input class="form-control" type="number" name="CreditosMin" value="@Context.Request.Query["CreditosMin"]" />
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">Créditos máx</label>
+    <input class="form-control" type="number" name="CreditosMax" value="@Context.Request.Query["CreditosMax"]" />
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">Desde</label>
+    <input class="form-control" type="time" name="HoraDesde" value="@Context.Request.Query["HoraDesde"]" />
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">Hasta</label>
+    <input class="form-control" type="time" name="HoraHasta" value="@Context.Request.Query["HoraHasta"]" />
+  </div>
+  <div class="col-md-1">
+    <button class="btn btn-primary w-100">Filtrar</button>
+  </div>
+</form>
+
+<table class="table table-striped mt-3">
+  <thead><tr><th>Código</th><th>Nombre</th><th>Créditos</th><th>Horario</th><th></th></tr></thead>
+  <tbody>
+  @foreach (var c in Model)
+  {
+    <tr>
+      <td>@c.Codigo</td>
+      <td>@c.Nombre</td>
+      <td>@c.Creditos</td>
+      <td>@c.HorarioInicio.ToString(@"hh\:mm") - @c.HorarioFin.ToString(@"hh\:mm")</td>
+      <td><a class="btn btn-sm btn-outline-primary" asp-action="Detalle" asp-route-id="@c.Id">Ver</a></td>
+    </tr>
+  }
+  </tbody>
+</table>

@@ -1,20 +1,22 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PortalAcademico.Data;
+using PortalAcademico.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DB (SQLite)
+
 builder.Services.AddDbContext<ApplicationDbContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Identity
+
 builder.Services.AddDefaultIdentity<IdentityUser>(o =>
 {
     o.SignIn.RequireConfirmedAccount = false;
 })
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
 builder.Services.AddControllersWithViews();
 
@@ -29,14 +31,22 @@ else
 builder.Services.AddSession(o =>
 {
     o.IdleTimeout = TimeSpan.FromMinutes(30);
-    o.Cookie.HttpOnly = true; o.Cookie.IsEssential = true;
+    o.Cookie.HttpOnly = true;
+    o.Cookie.IsEssential = true;
 });
+
+
+builder.Services.AddScoped<ICursoService, CursoService>();
+
 
 var app = builder.Build();
 
+
 using (var scope = app.Services.CreateScope())
 {
-    await Seed.RunAsync(scope.ServiceProvider);
+    var services = scope.ServiceProvider;
+
+    Seed.RunAsync(services).Wait();
 }
 
 
@@ -50,11 +60,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseSession(); 
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(name: "default",
+app.MapControllerRoute(
+    name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
