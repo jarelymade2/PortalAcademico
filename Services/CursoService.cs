@@ -135,6 +135,11 @@ namespace PortalAcademico.Services
             await InvalidateCacheAsync();
             return true;
         }
+        public async Task<List<Curso>> GetAllAsync()
+        {
+            var list = await _db.Cursos.AsNoTracking().ToListAsync();
+            return list.OrderBy(c => c.Nombre).ToList();
+        }
 
         public Task InvalidateCacheAsync() => _cache.RemoveAsync(CacheKey);
     }
