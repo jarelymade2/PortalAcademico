@@ -11,6 +11,7 @@ namespace PortalAcademico.Services
         Task<int>  CrearAsync(CursoEditDto dto);
         Task<bool> EditarAsync(CursoEditDto dto);
         Task<bool> DesactivarAsync(int id);
+        Task<List<Curso>> GetAllAsync();
 
         Task InvalidateCacheAsync();
 

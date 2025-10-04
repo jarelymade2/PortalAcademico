@@ -17,21 +17,23 @@ namespace PortalAcademico.Controllers
         _cursos = cursos;
         _mats = mats;
     }
-        [HttpGet]
-        public async Task<IActionResult> Index([FromQuery] CursoFilterDto f)
+    [HttpGet]
+    public async Task<IActionResult> Index([FromQuery] CursoFilterDto f)
+    {
+        try
         {
-            try
-            {
-                var data = await _cursos.GetActivosAsync(f);
-                return View(data);
-            }
-            catch (ArgumentException ex)
-            {
-                TempData["Error"] = ex.Message;
-                var data = await _cursos.GetActivosAsync(null);
-                return View(data);
-            }
+            // usa caché si NO hay filtros, se salta si hay filtros
+            var data = await _cursos.GetActivosCachedAsync(f);
+            return View(data);
         }
+        catch (ArgumentException ex)
+        {
+            TempData["Error"] = ex.Message;
+            var data = await _cursos.GetActivosCachedAsync(null);
+            return View(data);
+        }
+    }
+
 
         [HttpGet]
         public async Task<IActionResult> Detalle(int id)

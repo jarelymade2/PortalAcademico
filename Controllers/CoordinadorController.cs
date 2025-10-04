@@ -16,8 +16,8 @@ namespace PortalAcademico.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var data = await _cursos.GetActivosAsync(null);
-            return View(data);
+           var data = await _cursos.GetAllAsync();   // << trae activos e inactivos
+        return View(data);
         }
 
         [HttpGet]
@@ -73,14 +73,14 @@ namespace PortalAcademico.Controllers
             }
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+          [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Desactivar(int id)
         {
-            await _cursos.DesactivarAsync(id);
+            await _cursos.DesactivarAsync(id);        
             return RedirectToAction(nameof(Index));
         }
 
-        // ===== Matrículas =====
+
 
         [HttpGet]
         public async Task<IActionResult> Matriculas(int cursoId)
