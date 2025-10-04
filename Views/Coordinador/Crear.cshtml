@@ -1,0 +1,126 @@
+@model PortalAcademico.Dto.CursoEditDto
+@{
+    var isCreate = Model.Id is null;
+    ViewData["Title"] = isCreate ? "Crear curso" : "Editar curso";
+}
+
+<h2 class="mb-3">@ViewData["Title"]</h2>
+
+<div class="card shadow-sm">
+  <div class="card-header d-flex align-items-center">
+    <strong>@ViewData["Title"]</strong>
+  </div>
+
+  <div class="card-body">
+    <!-- Resumen de validación -->
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+    <form method="post" novalidate autocomplete="off">
+      @Html.AntiForgeryToken()
+      @if (!isCreate)
+      {
+        <!-- Mantener el Id al editar -->
+        <input type="hidden" asp-for="Id" />
+      }
+
+      <!-- Código -->
+      <div class="mb-3">
+        <label class="form-label" asp-for="Codigo"></label>
+        <input class="form-control"
+               asp-for="Codigo"
+               placeholder="p. ej. INF101"
+               maxlength="20"
+               autofocus
+               aria-describedby="helpCodigo" />
+        <div id="helpCodigo" class="form-text">Código único del curso.</div>
+        <span class="text-danger" asp-validation-for="Codigo"></span>
+      </div>
+
+      <!-- Nombre -->
+      <div class="mb-3">
+        <label class="form-label" asp-for="Nombre"></label>
+        <input class="form-control"
+               asp-for="Nombre"
+               placeholder="p. ej. Introducción a Programación"
+               maxlength="120"
+               aria-describedby="helpNombre" />
+        <div id="helpNombre" class="form-text">Nombre descriptivo del curso.</div>
+        <span class="text-danger" asp-validation-for="Nombre"></span>
+      </div>
+
+      <div class="row g-3">
+        <!-- Créditos -->
+        <div class="col-md-6">
+          <label class="form-label" asp-for="Creditos"></label>
+          <input class="form-control"
+                 asp-for="Creditos"
+                 type="number"
+                 min="1"
+                 step="1"
+                 inputmode="numeric"
+                 aria-describedby="helpCreditos" />
+          <div id="helpCreditos" class="form-text">Debe ser ≥ 1.</div>
+          <span class="text-danger" asp-validation-for="Creditos"></span>
+        </div>
+
+        <!-- Cupo -->
+        <div class="col-md-6">
+          <label class="form-label" asp-for="CupoMaximo"></label>
+          <input class="form-control"
+                 asp-for="CupoMaximo"
+                 type="number"
+                 min="1"
+                 step="1"
+                 inputmode="numeric"
+                 aria-describedby="helpCupo" />
+          <div id="helpCupo" class="form-text">Capacidad máxima de alumnos (≥ 1).</div>
+          <span class="text-danger" asp-validation-for="CupoMaximo"></span>
+        </div>
+      </div>
+
+      <!-- Horario -->
+      <fieldset class="mt-3">
+        <legend class="fs-6">Horario</legend>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label" asp-for="HorarioInicio">Inicio</label>
+            <input class="form-control"
+                   asp-for="HorarioInicio"
+                   type="time"
+                   aria-describedby="helpHorario" />
+            <span class="text-danger" asp-validation-for="HorarioInicio"></span>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" asp-for="HorarioFin">Fin</label>
+            <input class="form-control"
+                   asp-for="HorarioFin"
+                   type="time"
+                   aria-describedby="helpHorario" />
+            <span class="text-danger" asp-validation-for="HorarioFin"></span>
+          </div>
+        </div>
+        <div id="helpHorario" class="form-text">
+          El horario de fin debe ser posterior al de inicio.
+        </div>
+      </fieldset>
+
+      <!-- Activo -->
+      <div class="form-check form-switch mt-3">
+        <input class="form-check-input" type="checkbox" asp-for="Activo" role="switch" id="switchActivo" />
+        <label class="form-check-label" for="switchActivo" asp-for="Activo">Activo</label>
+      </div>
+
+      <!-- Acciones -->
+      <div class="d-flex gap-2 mt-4">
+        <button class="btn btn-primary" type="submit">
+          @(isCreate ? "Guardar" : "Guardar cambios")
+        </button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+@section Scripts{
+  <partial name="_ValidationScriptsPartial" />
+}

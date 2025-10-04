@@ -1,16 +1,121 @@
 @model PortalAcademico.Models.Curso
 @{
-    ViewData["Title"] = "Curso";
+    ViewData["Title"] = "Detalle del curso";
 }
-<h2>@Model.Nombre (@Model.Codigo)</h2>
-<p><strong>Créditos:</strong> @Model.Creditos</p>
-<p><strong>Horario:</strong> @Model.HorarioInicio.ToString(@"hh\:mm") - @Model.HorarioFin.ToString(@"hh\:mm")</p>
-<p><strong>Cupo máximo:</strong> @Model.CupoMaximo</p>
 
-@if (TempData["Error"] is string e)   { <div class="alert alert-danger">@e</div> }
-@if (TempData["Ok"]    is string ok)  { <div class="alert alert-success">@ok</div> }
+<style>
+    body {
+        background-color: #e6f3ff; /* Fondo celeste pastel */
+    }
 
-<form asp-controller="Cursos" asp-action="Inscribirse" method="post">
-  <input type="hidden" name="cursoId" value="@Model.Id" />
-  <button class="btn btn-success">Inscribirse</button>
-</form>
+    h1 {
+        color: #162d46; /* Azul oscuro elegante */
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 2rem;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        letter-spacing: 0.5px;
+    }
+
+    .card-cursos {
+        background: white;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem 2rem;
+    }
+
+    dt {
+        font-weight: 600;
+        color: #003366;
+    }
+
+    dd {
+        color: #333;
+    }
+
+    .btn-success {
+        background-color: #2a6974;
+        border: none;
+        font-weight: 500;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .btn-success:hover {
+        background-color: #2a5861;
+    }
+
+    .btn-outline-secondary {
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .alert {
+        border-radius: 12px;
+        font-size: 0.95rem;
+    }
+
+    .alert-danger {
+        background-color: #ffe6e6;
+        color: #a94442;
+        border: 1px solid #f5c6cb;
+    }
+
+    .alert-success {
+        background-color: #e6ffed;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+</style>
+
+<h1>
+    <i class="bi bi-journal-text"></i> @Model.Nombre (@Model.Codigo)
+</h1>
+
+<div class="card-cursos mx-auto" style="max-width: 700px;">
+    <div class="card-body">
+        <!-- Información del curso -->
+        <dl class="row mb-4">
+            <dt class="col-sm-4">Créditos</dt>
+            <dd class="col-sm-8">@Model.Creditos</dd>
+
+            <dt class="col-sm-4">Horario</dt>
+            <dd class="col-sm-8">
+                @Model.HorarioInicio.ToString(@"hh\:mm") - @Model.HorarioFin.ToString(@"hh\:mm")
+            </dd>
+
+            <dt class="col-sm-4">Cupo máximo</dt>
+            <dd class="col-sm-8">@Model.CupoMaximo</dd>
+        </dl>
+
+        <!-- Alertas -->
+        @if (TempData["Error"] is string e)
+        {
+            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                <i class="bi bi-exclamation-triangle"></i> @e
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        }
+        @if (TempData["Ok"] is string ok)
+        {
+            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                <i class="bi bi-check-circle"></i> @ok
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        }
+
+        <!-- Botones -->
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <form asp-controller="Cursos" asp-action="Inscribirse" method="post" class="d-inline">
+                <input type="hidden" name="cursoId" value="@Model.Id" />
+                <button class="btn btn-success px-4">
+                    <i class="bi bi-person-plus"></i> Inscribirse
+                </button>
+            </form>
+
+            <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                <i class="bi bi-arrow-left"></i> Volver al catálogo
+            </a>
+        </div>
+    </div>
+</div>
