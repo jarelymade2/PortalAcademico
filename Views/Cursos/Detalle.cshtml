@@ -1,0 +1,16 @@
+@model PortalAcademico.Models.Curso
+@{
+    ViewData["Title"] = "Curso";
+}
+<h2>@Model.Nombre (@Model.Codigo)</h2>
+<p><strong>Créditos:</strong> @Model.Creditos</p>
+<p><strong>Horario:</strong> @Model.HorarioInicio.ToString(@"hh\:mm") - @Model.HorarioFin.ToString(@"hh\:mm")</p>
+<p><strong>Cupo máximo:</strong> @Model.CupoMaximo</p>
+
+@if (TempData["Error"] is string e)   { <div class="alert alert-danger">@e</div> }
+@if (TempData["Ok"]    is string ok)  { <div class="alert alert-success">@ok</div> }
+
+<form asp-controller="Cursos" asp-action="Inscribirse" method="post">
+  <input type="hidden" name="cursoId" value="@Model.Id" />
+  <button class="btn btn-success">Inscribirse</button>
+</form>

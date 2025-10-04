@@ -13,7 +13,6 @@ C:\parci-progra\PortalAcademico\bin\Debug\net9.0\appsettings.Development.json
 C:\parci-progra\PortalAcademico\bin\Debug\net9.0\appsettings.json
 C:\parci-progra\PortalAcademico\bin\Debug\net9.0\PortalAcademico.staticwebassets.runtime.json
 C:\parci-progra\PortalAcademico\bin\Debug\net9.0\PortalAcademico.staticwebassets.endpoints.json
-C:\parci-progra\PortalAcademico\bin\Debug\net9.0\app.db
 C:\parci-progra\PortalAcademico\bin\Debug\net9.0\PortalAcademico.exe
 C:\parci-progra\PortalAcademico\bin\Debug\net9.0\PortalAcademico.deps.json
 C:\parci-progra\PortalAcademico\bin\Debug\net9.0\PortalAcademico.runtimeconfig.json
@@ -295,3 +294,4 @@ C:\parci-progra\PortalAcademico\obj\Debug\net9.0\refint\PortalAcademico.dll
 C:\parci-progra\PortalAcademico\obj\Debug\net9.0\PortalAcademico.pdb
 C:\parci-progra\PortalAcademico\obj\Debug\net9.0\PortalAcademico.genruntimeconfig.cache
 C:\parci-progra\PortalAcademico\obj\Debug\net9.0\ref\PortalAcademico.dll
+C:\parci-progra\PortalAcademico\bin\Debug\net9.0\app.db
