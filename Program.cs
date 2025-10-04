@@ -37,6 +37,7 @@ builder.Services.AddSession(o =>
 
 
 builder.Services.AddScoped<ICursoService, CursoService>();
+builder.Services.AddScoped<IMatriculaService, MatriculaService>();
 
 
 var app = builder.Build();
