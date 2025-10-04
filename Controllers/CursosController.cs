@@ -1,14 +1,22 @@
 using Microsoft.AspNetCore.Mvc;
 using PortalAcademico.Dto;
 using PortalAcademico.Services;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PortalAcademico.Controllers
 {
     public class CursosController : Controller
     {
-        private readonly ICursoService _cursos;
-        public CursosController(ICursoService cursos) => _cursos = cursos;
 
+    private readonly ICursoService _cursos;
+    private readonly IMatriculaService _mats;
+
+    public CursosController(ICursoService cursos, IMatriculaService mats)
+    {
+        _cursos = cursos;
+        _mats = mats;
+    }
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery] CursoFilterDto f)
         {
@@ -37,5 +45,20 @@ namespace PortalAcademico.Controllers
 
             return View(c);
         }
+
+        [Authorize]
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Inscribirse(int cursoId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId)) return Challenge();
+
+            var (ok, error) = await _mats.InscribirAsync(userId, cursoId);
+            if (!ok) TempData["Error"] = error;
+            else     TempData["Ok"]    = "Matrícula creada en estado PENDIENTE.";
+
+            return RedirectToAction("Detalle", new { id = cursoId });
+        }
+
     }
 }
