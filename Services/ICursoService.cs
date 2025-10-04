@@ -7,5 +7,8 @@ namespace PortalAcademico.Services
     {
         Task<List<Curso>> GetActivosAsync(CursoFilterDto? f = null);
         Task<Curso?> GetByIdAsync(int id);
+        Task<List<Curso>> GetActivosCachedAsync(CursoFilterDto? f = null);
+        Task InvalidateCacheAsync();
+
     }
 }

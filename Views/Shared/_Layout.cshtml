@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@{
+    // Lee la info de sesión para el enlace "Volver al curso"
+    var lastId = Context.Session.GetInt32("LastCourseId");
+    var lastName = Context.Session.GetString("LastCourseName");
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -18,20 +24,37 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <!-- Menú izquierdo -->
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Cursos" asp-action="Index">Cursos</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        @* Enlace condicional: aparece solo si hay curso reciente en sesión *@
+                        @if (lastId is not null && !string.IsNullOrEmpty(lastName))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-info" asp-controller="Cursos" asp-action="Detalle" asp-route-id="@lastId">
+                                    Volver al curso @lastName
+                                </a>
+                            </li>
+                        }
                     </ul>
+
+                    <!-- Zona de login -->
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -43,6 +66,7 @@
             &copy; 2025 - PortalAcademico - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
